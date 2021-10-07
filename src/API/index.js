@@ -26,3 +26,12 @@ export const createHousieGame = (maxPlayers, callback) => {
 		return callback(err.message, null);
 	}
 };
+
+export const getGameById = async (gameId, callback) => {
+	try {
+		return callback((await db.collection("games").doc(gameId).get()).data());
+	} catch (err) {
+		console.log(err);
+		return callback(err.message, null);
+	}
+};
