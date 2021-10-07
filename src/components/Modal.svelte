@@ -17,9 +17,9 @@
 
     .modal-header {
         display: flex;
-        padding: 1rem;
+        padding: 0.75rem 1rem;
         align-items: center;
-        border-bottom: 0.075rem solid #efefef;
+        border-bottom: 0.075rem solid #cfcfcf;
         text-align: left;
     }
 
