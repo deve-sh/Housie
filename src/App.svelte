@@ -1,6 +1,6 @@
 <script>
 	import { Button, Icon } from "svelte-materialify";
-	import { mdiAccount } from "@mdi/js";
+	import { mdiAccount, mdiControllerClassic as GameIcon } from "@mdi/js";
 
 	import auth from "./firebase/authentication";
 
@@ -8,14 +8,22 @@
 
 	let showLoginModal = false;
 	const toggleLoginModal = () => (showLoginModal = !showLoginModal);
+
+	let isLoggedIn = auth.currentUser;
+
+	auth.onAuthStateChanged((user) => {
+		isLoggedIn = !!user;
+	});
 </script>
 
 <main class="homepage">
 	<img class="homepageimage" src="/images/gameday.svg" alt="Game Day" />
 	<h1>Housie 🏠</h1>
 	<p>Sit Back, create a game, have fun with friends.</p>
-	{#if auth.currentUser}
-		<Button size="large" class="secondary-color pl-4">Create A Game</Button>
+	{#if isLoggedIn}
+		<Button size="large" class="secondary-color pl-4">
+			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
+		>
 	{:else}
 		<Button
 			size="large"
@@ -25,7 +33,7 @@
 		>
 	{/if}
 
-	{#if showLoginModal}
+	{#if !isLoggedIn && showLoginModal}
 		<Authentication toggler={toggleLoginModal} />
 	{/if}
 </main>
