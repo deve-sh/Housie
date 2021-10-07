@@ -1,7 +1,7 @@
-const drawRandomNumber = (alreadyDrawn = [], range = [0, 100]) => {
+const drawRandomNumber = (alreadyDrawn = [], range = [1, 101]) => {
 	let randomNumber = null;
 	do {
-		$rand = Math.floor(Math.random() * range[1]) + range[0];
+		randomNumber = Math.floor(Math.random() * range[1]) + range[0];
 	} while (alreadyDrawn.includes(randomNumber));
 	return randomNumber;
 };
