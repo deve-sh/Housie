@@ -1,8 +1,18 @@
-import auth from "../firebase/authentication";
+import auth, { providers } from "../firebase/authentication";
 import db, { firestore } from "../firebase/db";
 import drawRandomNumber from "../helpers/drawRandomNumber";
 
-export const createHousieGame = (maxPlayers, callback) => {
+export const loginWithGoogle = async (callback) => {
+	try {
+		await auth.signInWithPopup(providers.googleProvider);
+		return callback(null, auth.currentUser);
+	} catch (err) {
+		console.log(err);
+		return callback(err.message);
+	}
+};
+
+export const createHousieGame = async (maxPlayers, callback) => {
 	try {
 		if (!auth.currentUser)
 			return callback("You need to be signed in to create a game");

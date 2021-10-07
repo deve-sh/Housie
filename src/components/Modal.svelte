@@ -2,7 +2,6 @@
 	import { Overlay, Button, Icon } from "svelte-materialify";
     import { mdiClose } from '@mdi/js';
 
-	export let isOpen = false;
 	export let heading = "";
 	export let onClose = () => null;
 </script>
@@ -41,7 +40,7 @@
 </style>
 
 
-<Overlay {isOpen}>
+<Overlay>
 	<div class="modal">
 		<div class="modal-header">
 			<h4 class="heading">{heading}</h4>

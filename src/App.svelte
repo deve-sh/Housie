@@ -2,9 +2,9 @@
 	import { Button, Icon } from "svelte-materialify";
 	import { mdiAccount } from "@mdi/js";
 
-	import Modal from "./components/Modal.svelte";
-
 	import auth from "./firebase/authentication";
+
+	import Authentication from "./components/Authentication.svelte";
 
 	let showLoginModal = false;
 	const toggleLoginModal = () => (showLoginModal = !showLoginModal);
@@ -26,7 +26,7 @@
 	{/if}
 
 	{#if showLoginModal}
-		<Modal heading="Login To Your Account" onClose={toggleLoginModal} />
+		<Authentication toggler={toggleLoginModal} />
 	{/if}
 </main>
 
