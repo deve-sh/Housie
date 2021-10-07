@@ -62,3 +62,5 @@ export const drawNumber = async (gameId, callback) => {
 		return null;
 	}
 };
+
+export const getGameRef = (gameId) => db.collection("games").doc(gameId);
