@@ -5,6 +5,7 @@
 	import Modal from "../Modal.svelte";
 
 	import { getGameById } from "../../API";
+	import toasts from "../../helpers/toasts";
 
 	export let toggler = () => null;
 
@@ -15,6 +16,7 @@
 		isFetching = true;
 		const gameInfo = await getGameById(gameId);
 		isFetching = false;
+		if (!gameInfo) return toasts.generateError("Game not found.");
 		console.log(gameInfo);
 	};
 </script>

@@ -5,6 +5,7 @@
 	import Modal from "../Modal.svelte";
 
 	import { createHousieGame } from "../../API";
+	import toasts from "../../helpers/toasts";
 
 	export let toggler = () => null;
 
@@ -15,7 +16,8 @@
 		isCreating = true;
 		createHousieGame(maxPlayers, (err) => {
 			isCreating = false;
-			if (!err) toggler();
+			if (err) return toasts.generateError(err);
+			toggler();
 		});
 	};
 </script>
