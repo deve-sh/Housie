@@ -5,6 +5,7 @@
 	import Modal from "./Modal.svelte";
 
 	import { loginWithGoogle } from "../API";
+	import toasts from "../helpers/toasts";
 
 	export let toggler = () => null;
 
@@ -12,7 +13,11 @@
 
 	const loginUser = () => {
 		isLoggingIn = true;
-		loginWithGoogle(() => (isLoggingIn = false));
+		loginWithGoogle((err) => {
+			isLoggingIn = false;
+			if (err) return toasts.generateError(err);
+			toggler();
+		});
 	};
 </script>
 
