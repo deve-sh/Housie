@@ -5,9 +5,14 @@
 	import auth from "./firebase/authentication";
 
 	import Authentication from "./components/Authentication.svelte";
+	import CreateGameModal from "./components/Game/CreateGame.svelte";
 
 	let showLoginModal = false;
 	const toggleLoginModal = () => (showLoginModal = !showLoginModal);
+
+	let showGameCreatorModal = false;
+	const toggleGameCreatorModal = () =>
+		(showGameCreatorModal = !showGameCreatorModal);
 
 	let isLoggedIn = auth.currentUser;
 
@@ -21,7 +26,11 @@
 	<h1>Housie 🏠</h1>
 	<p>Sit Back, create a game, have fun with friends.</p>
 	{#if isLoggedIn}
-		<Button size="large" class="secondary-color pl-4">
+		<Button
+			size="large"
+			class="secondary-color pl-4"
+			on:click={toggleGameCreatorModal}
+		>
 			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
 		>
 	{:else}
@@ -35,6 +44,10 @@
 
 	{#if !isLoggedIn && showLoginModal}
 		<Authentication toggler={toggleLoginModal} />
+	{/if}
+
+	{#if isLoggedIn && showGameCreatorModal}
+		<CreateGameModal toggler={toggleGameCreatorModal} />
 	{/if}
 </main>
 
