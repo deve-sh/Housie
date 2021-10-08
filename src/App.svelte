@@ -1,4 +1,5 @@
 <script>
+	import { SvelteToast } from "@zerodevx/svelte-toast";
 	import { Button, Icon } from "svelte-materialify";
 	import {
 		mdiAccount,
@@ -30,6 +31,7 @@
 	});
 </script>
 
+<SvelteToast />
 <main class="homepage">
 	<img class="homepageimage" src="/images/gameday.svg" alt="Game Day" />
 	<h1>Housie 🏠</h1>
