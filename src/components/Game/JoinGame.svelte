@@ -1,6 +1,6 @@
 <script>
 	import { Button, Icon, TextField } from "svelte-materialify";
-	import { mdiControllerClassic as GameIcon } from "@mdi/js";
+	import { mdiMicrosoftXboxControllerBatteryCharging as JoinGameIcon } from "@mdi/js";
 
 	import Modal from "../Modal.svelte";
 
@@ -35,7 +35,7 @@
 			size="large"
 			class="primary-color"
 			on:click={joinExistingGame}
-			><Icon path={GameIcon} class="mr-3" /> Join Game</Button
+			><Icon path={JoinGameIcon} class="mr-3" /> Join Game</Button
 		>
 	</div>
 </Modal>

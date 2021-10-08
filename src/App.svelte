@@ -1,6 +1,10 @@
 <script>
 	import { Button, Icon } from "svelte-materialify";
-	import { mdiAccount, mdiControllerClassic as GameIcon } from "@mdi/js";
+	import {
+		mdiAccount,
+		mdiControllerClassic as GameIcon,
+		mdiMicrosoftXboxControllerBatteryCharging as JoinGameIcon,
+	} from "@mdi/js";
 
 	import auth from "./firebase/authentication";
 
@@ -39,7 +43,7 @@
 			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
 		>
 		<Button size="large" class="ml-2 white" on:click={toggleGameJoinerModal}>
-			<Icon path={GameIcon} class="mr-3" /> Join A Game</Button
+			<Icon path={JoinGameIcon} class="mr-3" /> Join A Game</Button
 		>
 	{:else}
 		<Button
