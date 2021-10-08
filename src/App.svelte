@@ -35,7 +35,7 @@
 <main class="homepage">
 	<img class="homepageimage" src="/images/gameday.svg" alt="Game Day" />
 	<h1>Housie 🏠</h1>
-	<p>Sit Back, create a game, have fun with friends.</p>
+	<p>Sit Back, create a game or join one, have fun with friends and family.</p>
 	{#if isLoggedIn}
 		<Button
 			size="large"
