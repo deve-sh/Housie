@@ -6,6 +6,7 @@
 
 	import Authentication from "./components/Authentication.svelte";
 	import CreateGameModal from "./components/Game/CreateGame.svelte";
+	import JoinGameModal from "./components/Game/JoinGame.svelte";
 
 	let showLoginModal = false;
 	const toggleLoginModal = () => (showLoginModal = !showLoginModal);
@@ -13,6 +14,10 @@
 	let showGameCreatorModal = false;
 	const toggleGameCreatorModal = () =>
 		(showGameCreatorModal = !showGameCreatorModal);
+
+	let showGameJoinerModal = false;
+	const toggleGameJoinerModal = () =>
+		(showGameJoinerModal = !showGameJoinerModal);
 
 	let isLoggedIn = auth.currentUser;
 
@@ -33,6 +38,9 @@
 		>
 			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
 		>
+		<Button size="large" class="ml-2 white" on:click={toggleGameJoinerModal}>
+			<Icon path={GameIcon} class="mr-3" /> Join A Game</Button
+		>
 	{:else}
 		<Button
 			size="large"
@@ -48,6 +56,10 @@
 
 	{#if isLoggedIn && showGameCreatorModal}
 		<CreateGameModal toggler={toggleGameCreatorModal} />
+	{/if}
+
+	{#if isLoggedIn && showGameJoinerModal}
+		<JoinGameModal toggler={toggleGameJoinerModal} />
 	{/if}
 </main>
 
