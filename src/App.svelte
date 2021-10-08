@@ -2,9 +2,10 @@
 	import { SvelteToast } from "@zerodevx/svelte-toast";
 	import { Button, Icon } from "svelte-materialify";
 	import {
-		mdiAccount,
+		mdiAccount as LoginIcon,
 		mdiControllerClassic as GameIcon,
 		mdiMicrosoftXboxControllerBatteryCharging as JoinGameIcon,
+		mdiExitToApp as LogoutIcon,
 	} from "@mdi/js";
 
 	import auth from "./firebase/authentication";
@@ -29,6 +30,11 @@
 	auth.onAuthStateChanged((user) => {
 		isLoggedIn = !!user;
 	});
+
+	const signUserOut = async () => {
+		await auth.signOut();
+		isLoggedIn = false;
+	};
 </script>
 
 <SvelteToast />
@@ -44,15 +50,24 @@
 		>
 			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
 		>
-		<Button size="large" class="ml-2 white" on:click={toggleGameJoinerModal}>
+		<Button size="large" class="ml-2 black white-text" on:click={toggleGameJoinerModal}>
 			<Icon path={JoinGameIcon} class="mr-3" /> Join A Game</Button
+		>
+		<br />
+		<Button
+			size="large"
+			depressed
+			class="mt-4 white"
+			on:click={signUserOut}
+		>
+			<Icon path={LogoutIcon} class="mr-3" /> Logout</Button
 		>
 	{:else}
 		<Button
 			size="large"
 			class="secondary-color pl-4"
 			on:click={toggleLoginModal}
-			><Icon path={mdiAccount} class="mr-3" /> Login</Button
+			><Icon path={LoginIcon} class="mr-3" /> Login</Button
 		>
 	{/if}
 
