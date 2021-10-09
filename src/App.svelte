@@ -9,7 +9,7 @@
 	} from "@mdi/js";
 
 	import auth from "./firebase/authentication";
-	import store from "./store";
+	import store, { setState } from "./store";
 
 	import Authentication from "./components/Authentication.svelte";
 	import CreateGameModal from "./components/Game/CreateGame.svelte";
@@ -26,17 +26,31 @@
 	const toggleGameJoinerModal = () =>
 		(showGameJoinerModal = !showGameJoinerModal);
 
-	console.log($store);
-
 	let isLoggedIn = $store.user || auth.currentUser;
 
 	auth.onAuthStateChanged((user) => {
 		isLoggedIn = !!user;
+		let userInfo = null;
+
+		if (user) {
+			userInfo = {
+				displayName: user.displayName,
+				phoneNumber: user.phoneNumber,
+				email: user.email,
+				uid: user.uid,
+				id: user.uid,
+				providerData: JSON.parse(JSON.stringify(user.providerData)),
+				lastSignInTime: user.metadata.lastSignInTime,
+				photoURL: user.photoURL,
+				isAnonymous: user.isAnonymous,
+			};
+		}
+
+		setState({ user: userInfo });
 	});
 
 	const signUserOut = async () => {
 		await auth.signOut();
-		isLoggedIn = false;
 	};
 </script>
 
