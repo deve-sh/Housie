@@ -12,4 +12,7 @@ store.subscribe((value) =>
 	localStorage.setItem("housie-store", JSON.stringify(value))
 );
 
+export const setState = (updates = {}) =>
+	store.update((oldState) => ({ ...oldState, ...updates }));
+
 export default store;

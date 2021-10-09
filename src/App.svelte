@@ -9,6 +9,7 @@
 	} from "@mdi/js";
 
 	import auth from "./firebase/authentication";
+	import store from "./store";
 
 	import Authentication from "./components/Authentication.svelte";
 	import CreateGameModal from "./components/Game/CreateGame.svelte";
@@ -25,7 +26,9 @@
 	const toggleGameJoinerModal = () =>
 		(showGameJoinerModal = !showGameJoinerModal);
 
-	let isLoggedIn = auth.currentUser;
+	console.log($store);
+
+	let isLoggedIn = $store.user || auth.currentUser;
 
 	auth.onAuthStateChanged((user) => {
 		isLoggedIn = !!user;
@@ -50,16 +53,15 @@
 		>
 			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
 		>
-		<Button size="large" class="ml-2 black white-text" on:click={toggleGameJoinerModal}>
+		<Button
+			size="large"
+			class="ml-2 black white-text"
+			on:click={toggleGameJoinerModal}
+		>
 			<Icon path={JoinGameIcon} class="mr-3" /> Join A Game</Button
 		>
 		<br />
-		<Button
-			size="large"
-			depressed
-			class="mt-4 white"
-			on:click={signUserOut}
-		>
+		<Button size="large" depressed class="mt-4 white" on:click={signUserOut}>
 			<Icon path={LogoutIcon} class="mr-3" /> Logout</Button
 		>
 	{:else}
