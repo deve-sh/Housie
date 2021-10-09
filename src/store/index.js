@@ -8,7 +8,7 @@ const storedStore = JSON.parse(
 const store = writable(storedStore);
 
 // Persist changes to local storage.
-theme.subscribe((value) =>
+store.subscribe((value) =>
 	localStorage.setItem("housie-store", JSON.stringify(value))
 );
 
