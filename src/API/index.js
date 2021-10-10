@@ -1,5 +1,6 @@
 import auth, { providers } from "../firebase/authentication";
 import db, { firestore } from "../firebase/db";
+import drawNRandomNumbers from "../helpers/drawNRandomNumbers";
 import drawRandomNumber from "../helpers/drawRandomNumber";
 
 export const loginWithGoogle = async (callback) => {
@@ -80,7 +81,12 @@ export const joinGame = async (gameId, callback) => {
 		if (!auth.currentUser)
 			return callback("You need to be signed in for joining a game.");
 
+		const batch = db.batch();
+
 		const gameRef = db.collection("games").doc(gameId);
+		const gameUserRef = db
+			.collection("gameusers")
+			.doc(`${gameId}-${auth.currentUser.uid}`);
 		const gameData = await getGameById(gameId);
 
 		if (!gameData) return callback("Game not found.");
@@ -96,7 +102,7 @@ export const joinGame = async (gameId, callback) => {
 			else if (gameData.players?.length >= gameData.maxPlayers)
 				return callback("Player capacity reached.");
 			// All checks passed. Update
-			await gameRef.update({
+			batch.update(gameRef, {
 				players: firestore.FieldValue.arrayUnion(auth.currentUser.uid),
 				[`playerInfos.${auth.currentUser.uid}`]:
 					firestore.FieldValue.arrayUnion({
@@ -106,7 +112,16 @@ export const joinGame = async (gameId, callback) => {
 					}),
 				updatedAt: firestore.FieldValue.serverTimestamp(),
 			});
+			batch.set(gameUserRef, {
+				updatedAt: firestore.FieldValue.serverTimestamp(),
+				createdAt: firestore.FieldValue.serverTimestamp(),
+				user: auth.currentUser.uid,
+				joinedAt: firestore.FieldValue.serverTimestamp(),
+				numbersAllocated: drawNRandomNumbers(),
+			});
 		}
+
+		await batch.commit();
 
 		return callback(null, await getGameById(gameId));
 	} catch (err) {
