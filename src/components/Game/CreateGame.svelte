@@ -6,6 +6,7 @@
 
 	import { createHousieGame } from "../../API";
 	import toasts from "../../helpers/toasts";
+	import { setState } from "../../store";
 
 	export let toggler = () => null;
 
@@ -14,9 +15,10 @@
 
 	const createNewGame = () => {
 		isCreating = true;
-		createHousieGame(maxPlayers, (err) => {
+		createHousieGame(maxPlayers, (err, createdGameData) => {
 			isCreating = false;
 			if (err) return toasts.generateError(err);
+			setState({ activeGameId: createdGameData.gameId });
 			toggler();
 		});
 	};
