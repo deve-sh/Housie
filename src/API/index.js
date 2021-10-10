@@ -65,6 +65,7 @@ export const drawNumber = async (gameId, callback) => {
 		const numberDrawn = drawRandomNumber(gameData.numbersDrawn, [1, 101]);
 		await gameRef.update({
 			numbersDrawn: firestore.FieldValue.arrayUnion(numberDrawn),
+			lastDrawnAt: firestore.FieldValue.serverTimestamp(),
 			updatedAt: firestore.FieldValue.serverTimestamp(),
 		});
 		return callback(null);
