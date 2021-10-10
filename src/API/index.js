@@ -74,3 +74,43 @@ export const drawNumber = async (gameId, callback) => {
 };
 
 export const getGameRef = (gameId) => db.collection("games").doc(gameId);
+
+export const joinGame = async (gameId, callback) => {
+	try {
+		if (!auth.currentUser)
+			return callback("You need to be signed in for joining a game.");
+
+		const gameRef = db.collection("games").doc(gameId);
+		const gameData = await getGameById(gameId);
+
+		if (!gameData) return callback("Game not found.");
+
+		if (gameData.createdBy === auth.currentUser.uid)
+			return callback(null, gameData); // Simply pass the user to the game page for administration.
+
+		if (gameData.players?.includes(auth.currentUser.uid)) {
+			// User already part of the game.
+			return callback(null, gameData);
+		} else {
+			if (gameData.started) return callback("Game has already started.");
+			else if (gameData.players?.length >= gameData.maxPlayers)
+				return callback("Player capacity reached.");
+			// All checks passed. Update
+			await gameRef.update({
+				players: firestore.FieldValue.arrayUnion(auth.currentUser.uid),
+				[`playerInfos.${auth.currentUser.uid}`]:
+					firestore.FieldValue.arrayUnion({
+						joinedAt: firestore.FieldValue.serverTimestamp(),
+						email: auth.currentUser.email,
+						name: auth.currentUser.displayName,
+					}),
+				updatedAt: firestore.FieldValue.serverTimestamp(),
+			});
+		}
+
+		return callback(null, await getGameById(gameId));
+	} catch (err) {
+		console.log(err);
+		return callback(err.message);
+	}
+};
