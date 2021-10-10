@@ -19,6 +19,10 @@
 
 	let realtimeListener = null;
 
+	const exitGame = () => {
+		setState({ activeGameId: null });
+	};
+
 	onMount(() => {
 		if (gameId && playerInfo) {
 			realtimeListener = getGameRef(gameId).onSnapshot((doc) => {
@@ -43,10 +47,6 @@
 		if (realtimeListener && typeof realtimeListener === "function")
 			realtimeListener(); // Unsubscribe device from realtime updates for game.
 	});
-
-	const exitGame = () => {
-		setState({ activeGameId: null });
-	};
 </script>
 
 <main id="game-container" class="game-page">
@@ -58,7 +58,7 @@
 		<!-- Common Block -->
 		<div class="game-common">
 			<div class="text-right">
-				<Button class="red white-text" onClick={exitGame}
+				<Button class="red white-text" on:click={exitGame}
 					><Icon class="mr-3" path={ExitIcon} /> Exit Game</Button
 				>
 			</div>
