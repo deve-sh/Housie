@@ -6,13 +6,15 @@
 	import NumberGrid from "./components/Game/NumberGrid.svelte";
 
 	import getHundredNumbers from "./helpers/getHundredNumbers";
-	import { getGameRef } from "./API";
+	import { getGameRef, getGameUserData } from "./API";
 	import state, { setState } from "./store";
+	import auth from "./firebase/authentication";
 
 	export let gameId;
 	export let playerInfo;
 
 	let gameData;
+	let gameUserData;
 	let gameLoading = true;
 
 	let realtimeListener = null;
@@ -22,6 +24,17 @@
 			realtimeListener = getGameRef(gameId).onSnapshot((doc) => {
 				gameLoading = false;
 				gameData = doc.data();
+
+				if (gameData?.createdBy !== auth.currentUser.uid) {
+					// User is player. Need to fetch additional data about user's allocated numbers.
+					getGameUserData(gameId, auth.currentUser.uid, (error, data) => {
+						if (error) {
+							toasts.generateError(error);
+							exitGame();
+						}
+						gameUserData = data;
+					});
+				}
 			});
 		}
 	});
@@ -54,10 +67,14 @@
 			<!-- Admin Block -->
 			<NumberGrid
 				numberList={getHundredNumbers()}
-				selectedNumbers={$gameData?.numbersDrawn || []}
+				selectedNumbers={gameData?.numbersDrawn || []}
 			/>
 		{:else}
 			<!-- Player Block -->
+			<NumberGrid
+				numberList={gameUserData?.numbersAllocated || []}
+				selectedNumbers={gameData?.numbersDrawn || []}
+			/>
 		{/if}
 	{/if}
 </main>
