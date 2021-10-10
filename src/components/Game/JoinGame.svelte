@@ -19,6 +19,7 @@
 		isFetching = false;
 		if (!gameInfo) return toasts.generateError("Game not found.");
 
+		toggler();
 		// Set global state to contain game id.
 		setState({ activeGameId: gameId });
 	};
