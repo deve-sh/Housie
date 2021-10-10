@@ -114,3 +114,32 @@ export const joinGame = async (gameId, callback) => {
 		return callback(err.message);
 	}
 };
+
+export const startGame = async (gameId, callback) => {
+	try {
+		if (!auth.currentUser)
+			return callback("You need to be signed in for updating a game.");
+
+		const gameRef = db.collection("games").doc(gameId);
+		const gameData = await getGameById(gameId);
+
+		if (!gameData) return callback("Game not found.");
+
+		if (gameData.createdBy !== auth.currentUser.uid)
+			return callback("Unauthorized");
+
+		if (gameData.started) return callback("Game has already started.");
+
+		// All checks passed. Update
+		await gameRef.update({
+			started: true,
+			startedAt: firestore.FieldValue.serverTimestamp(),
+			updatedAt: firestore.FieldValue.serverTimestamp(),
+		});
+
+		return callback(null, await getGameById(gameId));
+	} catch (err) {
+		console.log(err);
+		return callback(err.message);
+	}
+};
