@@ -131,6 +131,20 @@ export const joinGame = async (gameId, callback) => {
 	}
 };
 
+export const getGameUserData = async (gameId, userId, callback) => {
+	try {
+		const gameUserData = (
+			await db.collection("gameusers").doc(`${gameId}-${userId}`).get()
+		).data();
+		if (callback) return callback(null, gameUserData);
+		return gameUserData;
+	} catch (err) {
+		console.log(err);
+		if (callback) return callback(err.message, null);
+		return null;
+	}
+};
+
 export const startGame = async (gameId, callback) => {
 	try {
 		if (!auth.currentUser)
