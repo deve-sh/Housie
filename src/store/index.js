@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 // Get persisted value from local storage.
 const storedStore = JSON.parse(
-	localStorage.getItem("housie-store") || '{ "user": null }'
+	localStorage.getItem("housie-store") || '{ "user": null, "activeGameId": null }'
 );
 
 const store = writable(storedStore);

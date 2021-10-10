@@ -6,6 +6,7 @@
 
 	import { getGameById } from "../../API";
 	import toasts from "../../helpers/toasts";
+	import { setState } from "../../store";
 
 	export let toggler = () => null;
 
@@ -17,7 +18,9 @@
 		const gameInfo = await getGameById(gameId);
 		isFetching = false;
 		if (!gameInfo) return toasts.generateError("Game not found.");
-		console.log(gameInfo);
+
+		// Set global state to contain game id.
+		setState({ activeGameId: gameId });
 	};
 </script>
 
