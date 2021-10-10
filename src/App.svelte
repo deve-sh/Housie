@@ -98,6 +98,10 @@
 	{#if isLoggedIn && showGameJoinerModal}
 		<JoinGameModal toggler={toggleGameJoinerModal} />
 	{/if}
+
+	{#if isLoggedIn && $store.activeGameId}
+		Game Going on: {$store.activeGameId}
+	{/if}
 </main>
 
 <style>
