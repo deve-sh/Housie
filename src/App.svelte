@@ -15,6 +15,8 @@
 	import CreateGameModal from "./components/Game/CreateGame.svelte";
 	import JoinGameModal from "./components/Game/JoinGame.svelte";
 
+	import Game from "./Game.svelte";
+
 	let showLoginModal = false;
 	const toggleLoginModal = () => (showLoginModal = !showLoginModal);
 
@@ -56,51 +58,53 @@
 
 <SvelteToast />
 <main class="homepage">
-	<img class="homepageimage" src="/images/gameday.svg" alt="Game Day" />
-	<h1>Housie 🏠</h1>
-	<p>Sit Back, create a game or join one, have fun with friends and family.</p>
-	{#if isLoggedIn}
-		<Button
-			size="large"
-			class="secondary-color pl-4"
-			on:click={toggleGameCreatorModal}
-		>
-			<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
-		>
-		<Button
-			size="large"
-			class="ml-2 black white-text"
-			on:click={toggleGameJoinerModal}
-		>
-			<Icon path={JoinGameIcon} class="mr-3" /> Join A Game</Button
-		>
-		<br />
-		<Button size="large" depressed class="mt-4 white" on:click={signUserOut}>
-			<Icon path={LogoutIcon} class="mr-3" /> Logout</Button
-		>
+	{#if !isLoggedIn || !$store.activeGameId}
+		<img class="homepageimage" src="/images/gameday.svg" alt="Game Day" />
+		<h1>Housie 🏠</h1>
+		<p>
+			Sit Back, create a game or join one, have fun with friends and family.
+		</p>
+		{#if isLoggedIn}
+			<Button
+				size="large"
+				class="secondary-color pl-4"
+				on:click={toggleGameCreatorModal}
+			>
+				<Icon path={GameIcon} class="mr-3" /> Create A Game</Button
+			>
+			<Button
+				size="large"
+				class="ml-2 black white-text"
+				on:click={toggleGameJoinerModal}
+			>
+				<Icon path={JoinGameIcon} class="mr-3" /> Join A Game</Button
+			>
+			<br />
+			<Button size="large" depressed class="mt-4 white" on:click={signUserOut}>
+				<Icon path={LogoutIcon} class="mr-3" /> Logout</Button
+			>
+		{:else}
+			<Button
+				size="large"
+				class="secondary-color pl-4"
+				on:click={toggleLoginModal}
+				><Icon path={LoginIcon} class="mr-3" /> Login</Button
+			>
+		{/if}
+
+		{#if !isLoggedIn && showLoginModal}
+			<Authentication toggler={toggleLoginModal} />
+		{/if}
+
+		{#if isLoggedIn && showGameCreatorModal}
+			<CreateGameModal toggler={toggleGameCreatorModal} />
+		{/if}
+
+		{#if isLoggedIn && showGameJoinerModal}
+			<JoinGameModal toggler={toggleGameJoinerModal} />
+		{/if}
 	{:else}
-		<Button
-			size="large"
-			class="secondary-color pl-4"
-			on:click={toggleLoginModal}
-			><Icon path={LoginIcon} class="mr-3" /> Login</Button
-		>
-	{/if}
-
-	{#if !isLoggedIn && showLoginModal}
-		<Authentication toggler={toggleLoginModal} />
-	{/if}
-
-	{#if isLoggedIn && showGameCreatorModal}
-		<CreateGameModal toggler={toggleGameCreatorModal} />
-	{/if}
-
-	{#if isLoggedIn && showGameJoinerModal}
-		<JoinGameModal toggler={toggleGameJoinerModal} />
-	{/if}
-
-	{#if isLoggedIn && $store.activeGameId}
-		Game Going on: {$store.activeGameId}
+		<Game gameId={$store.activeGameId} playerInfo={$store.user} />
 	{/if}
 </main>
 
