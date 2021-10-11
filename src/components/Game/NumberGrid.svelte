@@ -14,9 +14,11 @@
 <style>
 	.numbergrid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-		grid-gap: 1.5rem;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		/*repeat(auto-fill, minmax(200px, 1fr))*/;
+		grid-gap: 1rem;
 		margin-top: 1.5rem;
+		overflow-x: auto;
 	}
 
 	.numbergrid .number {
@@ -25,6 +27,16 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 		border-radius: 0.5rem;
+	}
+
+	@media only screen and (max-width: 768px) {
+		.numbergrid {
+			grid-gap: 0.5rem;
+		}
+		.numbergrid .number {
+			padding: 0.75rem;
+			font-size: 1.125rem;
+		}
 	}
 
 	.numbergrid .number.selected {
