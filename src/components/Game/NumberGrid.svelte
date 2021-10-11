@@ -1,11 +1,15 @@
 <script>
 	export let numberList = [];
 	export let selectedNumbers = [];
+	export let onNumberClick = () => null;
 </script>
 
 <div class="numbergrid">
 	{#each numberList as number}
-		<div class={`number ${selectedNumbers.includes(number) ? "selected" : ""}`}>
+		<div
+			class={`number ${selectedNumbers.includes(number) ? "selected" : ""}`}
+			on:click={() => onNumberClick(number)}
+		>
 			{number}
 		</div>
 	{/each}
@@ -15,7 +19,7 @@
 	.numbergrid {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-		/*repeat(auto-fill, minmax(200px, 1fr))*/;
+		/*repeat(auto-fill, minmax(200px, 1fr))*/
 		grid-gap: 1rem;
 		margin-top: 1.5rem;
 		overflow-x: auto;
@@ -27,6 +31,7 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 		border-radius: 0.5rem;
+		cursor: pointer;
 	}
 
 	@media only screen and (max-width: 768px) {
