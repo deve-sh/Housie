@@ -68,10 +68,10 @@ export const drawNumber = async (gameId, callback) => {
 			lastDrawnAt: firestore.FieldValue.serverTimestamp(),
 			updatedAt: firestore.FieldValue.serverTimestamp(),
 		});
-		return callback(null);
+		return callback(null, numberDrawn);
 	} catch (err) {
 		console.log(err);
-		return null;
+		return callback(err.message);
 	}
 };
 
