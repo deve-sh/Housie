@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy, onMount } from "svelte";
-	import { ProgressCircular, Button, Icon } from "svelte-materialify";
+	import { ProgressCircular, Button, Icon, Switch } from "svelte-materialify";
 	import {
 		mdiExitToApp as ExitIcon,
 		mdiDice5 as DrawNumberIcon,
@@ -22,6 +22,18 @@
 	let gameLoading = true;
 	let drawnNumber = "N/A";
 	let isNumberDrawing = false;
+
+	// Player-specific state
+	let autoPunchDrawnNumbers = false;
+	let punchedNumbers = [];
+	const toggleAutoPunch = () =>
+		(autoPunchDrawnNumbers = !autoPunchDrawnNumbers);
+	const onPlayerNumberClick = (number) => {
+		const numberIndex = punchedNumbers.indexOf(number);
+		if (numberIndex !== -1) punchedNumbers.splice(numberIndex, 1);
+		else punchedNumbers.push(number);
+	};
+	// End of player-specific state
 
 	let realtimeListener = null;
 
@@ -112,9 +124,17 @@
 			/>
 		{:else}
 			<!-- Player Block -->
+			<div style="text-align: center; margin-bottom: 1.5rem;">
+				<Switch checked={autoPunchDrawnNumbers} on:click={toggleAutoPunch}
+					>Auto-Punch Numbers</Switch
+				>
+			</div>
 			<NumberGrid
 				numberList={gameUserData?.numbersAllocated || []}
-				selectedNumbers={gameData?.numbersDrawn || []}
+				selectedNumbers={autoPunchDrawnNumbers
+					? gameData?.numbersDrawn || []
+					: punchedNumbers}
+				onNumberClick={onPlayerNumberClick}
 			/>
 		{/if}
 	{/if}
