@@ -1,12 +1,15 @@
 <script>
 	import { onDestroy, onMount } from "svelte";
 	import { ProgressCircular, Button, Icon } from "svelte-materialify";
-	import { mdiExitToApp as ExitIcon } from "@mdi/js";
+	import {
+		mdiExitToApp as ExitIcon,
+		mdiDice5 as DrawNumberIcon,
+	} from "@mdi/js";
 
 	import NumberGrid from "./components/Game/NumberGrid.svelte";
 
 	import getHundredNumbers from "./helpers/getHundredNumbers";
-	import { getGameRef, getGameUserData } from "./API";
+	import { drawNumber, getGameRef, getGameUserData } from "./API";
 	import state, { setState } from "./store";
 	import auth from "./firebase/authentication";
 
@@ -16,6 +19,8 @@
 	let gameData;
 	let gameUserData;
 	let gameLoading = true;
+	let drawnNumber = "N/A";
+	let isNumberDrawing = false;
 
 	let realtimeListener = null;
 
@@ -47,6 +52,15 @@
 		if (realtimeListener && typeof realtimeListener === "function")
 			realtimeListener(); // Unsubscribe device from realtime updates for game.
 	});
+
+	const drawGameNumber = () => {
+		isNumberDrawing = true;
+		drawNumber(gameId, (error, number) => {
+			isNumberDrawing = false;
+			if (error) return toasts.generateError(error);
+			drawnNumber = number;
+		});
+	};
 </script>
 
 <main id="game-container" class="game-page">
@@ -65,6 +79,20 @@
 		</div>
 		{#if gameData?.createdBy === $state?.user?.uid}
 			<!-- Admin Block -->
+			<div class="drawnnumber">
+				{#if isNumberDrawing}
+					<ProgressCircular />
+				{:else}
+					{drawnNumber}
+				{/if}
+			</div>
+			<Button
+				class="black white-text"
+				disabled={isNumberDrawing}
+				on:click={drawGameNumber}
+				><Icon class="mr-3" path={DrawNumberIcon} /> Draw Number</Button
+			>
+			<br />
 			<NumberGrid
 				numberList={getHundredNumbers()}
 				selectedNumbers={gameData?.numbersDrawn || []}
@@ -80,4 +108,14 @@
 </main>
 
 <style type="text/css">
+	.drawnnumber {
+		border: 0.075rem solid black;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		min-width: 6.5rem;
+		max-width: 10.5rem;
+		margin: 1.5rem auto;
+		font-size: 2.5rem;
+		font-weight: 500;
+	}
 </style>
