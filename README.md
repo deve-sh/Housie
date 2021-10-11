@@ -21,14 +21,23 @@ const firebaseConfig = {
 export default firebaseConfig;
 ```
 
-### Firebase Security Rules required
+Run the following commands:
+
+```bash
+npm install
+npm run dev
+```
+
+The app should function as expected.
+
+### Firestore Security Rules required
 
 Very basic, please feel free to extend.
 
 ```
 match /games/{gameId} {
     allow create: if isSignedIn();
-    allow update: if isSignedIn() && 
+    allow update: if isSignedIn() &&
         resource.data.createdBy == request.resource.data.createdBy;
     allow get: if isSignedIn();
     allow list: if false;
