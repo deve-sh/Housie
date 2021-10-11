@@ -4,12 +4,13 @@
 	import {
 		mdiExitToApp as ExitIcon,
 		mdiDice5 as DrawNumberIcon,
+		mdiPlay as StartGameIcon,
 	} from "@mdi/js";
 
 	import NumberGrid from "./components/Game/NumberGrid.svelte";
 
 	import getHundredNumbers from "./helpers/getHundredNumbers";
-	import { drawNumber, getGameRef, getGameUserData } from "./API";
+	import { drawNumber, getGameRef, getGameUserData, startGame } from "./API";
 	import state, { setState } from "./store";
 	import auth from "./firebase/authentication";
 
@@ -61,6 +62,12 @@
 			drawnNumber = number;
 		});
 	};
+
+	const startCurrentGame = () => {
+		startGame(gameId, (error) => {
+			if (error) return toasts.generateError(error);
+		});
+	};
 </script>
 
 <main id="game-container" class="game-page">
@@ -79,19 +86,25 @@
 		</div>
 		{#if gameData?.createdBy === $state?.user?.uid}
 			<!-- Admin Block -->
-			<div class="drawnnumber">
-				{#if isNumberDrawing}
-					<ProgressCircular />
-				{:else}
-					{drawnNumber}
-				{/if}
-			</div>
-			<Button
-				class="black white-text"
-				disabled={isNumberDrawing}
-				on:click={drawGameNumber}
-				><Icon class="mr-3" path={DrawNumberIcon} /> Draw Number</Button
-			>
+			{#if !gameData?.started}
+				<Button class="green white-text" on:click={startCurrentGame}
+					><Icon class="mr-3" path={StartGameIcon} /> Start Game</Button
+				>
+			{:else}
+				<div class="drawnnumber">
+					{#if isNumberDrawing}
+						<ProgressCircular />
+					{:else}
+						{drawnNumber}
+					{/if}
+				</div>
+				<Button
+					class="black white-text"
+					disabled={isNumberDrawing}
+					on:click={drawGameNumber}
+					><Icon class="mr-3" path={DrawNumberIcon} /> Draw Number</Button
+				>
+			{/if}
 			<br />
 			<NumberGrid
 				numberList={getHundredNumbers()}
