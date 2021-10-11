@@ -61,6 +61,7 @@ export const drawNumber = async (gameId, callback) => {
 		if (!gameData) return callback("Game not found.");
 		else if (gameData.createdBy !== auth.currentUser.uid)
 			return callback("You can't draw a number for this game.");
+		else if (!gameData.started) return callback("Game has not been started.");
 
 		const numberDrawn = drawRandomNumber(gameData.numbersDrawn, [1, 101]);
 		await gameRef.update({
